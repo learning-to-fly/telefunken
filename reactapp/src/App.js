@@ -1,18 +1,31 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className="first_form">
+          <form id="first_form">
+            <div className="form_line">
+              <label>Enter title</label>
+              <div className="input">
+                <input type="text" />
+              </div>
+            </div>
+            <div className="form_line">
+              <label>Enter text</label>
+              <div className="textarea">
+                <textarea></textarea>
+              </div>
+              </div>
+              <div className="form_line">
+                <div className="submit">
+                  <button type="submit" form="first_form">Submit</button>
+                </div>
+              </div>           
+          </form>
+        </div>  
       </div>
     );
   }
