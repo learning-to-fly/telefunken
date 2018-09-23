@@ -6,7 +6,9 @@ const insertDocuments = function(db, callback) {
   const collection = db.collection('documents');
   // Insert some documents
   collection.insertMany([
-    {a : 1}, {a : 2}, {a : 3}
+    {title : "Title of page 1", content: "page content 1"},
+    {title : "Title of page 2", content: "page content 2"},
+    {title : "Title of page 3", content: "page content 3"}
   ], function(err, result) {
     assert.equal(err, null);
     assert.equal(3, result.result.n);
