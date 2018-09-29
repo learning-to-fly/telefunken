@@ -17,7 +17,7 @@ router.get('/all', function(req, res) {
     })
   })
 
-  router.get('/:id', function(req, res) {
+  router.get('/page/:id', function(req, res) {
     var id = req.params.id;
     console.log("FIND by ID " + id);
     Topic.findById(id, function(err, topics){
