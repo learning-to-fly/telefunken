@@ -1,30 +1,31 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from 'axios';
 
 class Page extends Component{
     state = {
-        loadedPage: null,
-        pages: []
+        activePage: null
     }
-    componentDidMount(){
-        console.log(this.props);
-      axios.get('/all')
-              .then(response => {
-                this.setState({pages: response.data});
-                });
-               
-              
-             
-                let loadedPage = this.state.pages.filter(function( el ) {
-                  return el._id == this.props.match.params.id;
-                  
-                });
-                this.setState({loadedPage: loadedPage[0]});
-      }
-      render(){
-          return(
-              <h1>{this.state.loadedPage.title}</h1>
-          );
-      }
+    componentDidMount () {
+        // /page/ID 
+        
+        axios.get('http://localhost:3000/page/'+this.props.match.params.id)
+        .then(response => {
+          this.setState({activePage: response.data});
+          console.log(response.data);
+        });
+     
+        
+    }
+    render(){
+        return(
+            <div>
+                <h5>{this.state.activePage.title}</h5>
+                <div>{this.state.activePage.content}</div>
+            </div>
+        );
+    }
+
+    
+
 }
 export default Page;

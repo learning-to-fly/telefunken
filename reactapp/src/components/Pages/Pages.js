@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+//import axios from 'axios';
+//import { NavLink } from 'react-router-dom';
+import NavMenu from '../NavMenu/NavMenu';
+import Page from '../Page/Page';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
 
 class Pages extends Component{
     state = {
@@ -8,23 +11,32 @@ class Pages extends Component{
         pages: []
     }
     componentDidMount(){
-        axios.get('http://localhost:3000/all')
+       axios.get('http://localhost:3000/all')
               .then(response => {
                 this.setState({pages: response.data});
-                console.log(response.data);
+                console.log('[Pages componentDidMount()]' + response.data);
               });
-    
+              
+           
       }
+      openPageHandler = (id, title, content) => {
+        this.setState({activePage: [id, title, content]});
+        //this.props.history.push({pathname: '/page/' + id});
+        
+        console.log('clicked : !!!!!!   ' + id);
+        console.log('[openPageHandler] state.activePage : !!!!!!   ' + this.state.activePage);
+      };
+
     render(){
-        const pages = this.state.pages.map(page => {
-            return (
-              <li key={page._id}>
-                <NavLink to={'/page/'+page._id}>{page.title}</NavLink>
-              </li>
-              );
-          });
-        return(
-            <ul>{ pages }</ul>
+
+        return( 
+            <div>
+            <NavMenu 
+                pages = {this.state.pages} 
+                openPage = {this.openPageHandler} />
+               
+            </div>
+            
         );
     }
 }
