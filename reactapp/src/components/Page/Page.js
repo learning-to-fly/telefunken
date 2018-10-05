@@ -3,15 +3,15 @@ import axios from 'axios';
 
 class Page extends Component{
     state = {
-        activePage: null
+        activePage: {}
     }
     componentDidMount () {
         // /page/ID 
         
-        axios.get('http://localhost:3000/page/'+this.props.match.params.id)
+        axios.get('/page/'+this.props.match.params.id)
         .then(response => {
-          this.setState({activePage: response.data});
-          console.log(response.data);
+            this.setState({activePage: response.data});
+            console.log('[page componentDidMount]' + this.state.activePage);
         });
      
         
@@ -19,8 +19,9 @@ class Page extends Component{
     render(){
         return(
             <div>
+                <h1>Page</h1>
                 <h5>{this.state.activePage.title}</h5>
-                <div>{this.state.activePage.content}</div>
+                <div>{this.state.activePage.text}</div>
             </div>
         );
     }

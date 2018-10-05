@@ -9,7 +9,7 @@ const navMenu = (props) => {
             <Link to={'/page/'+ page._id} key = {page._id}>
              <Item 
                 
-                clicked = {() => props.openPage(page._id,page.title, page.content)}
+                clicked = {() => props.openPage(page._id,page.title, page.text)}
                 title = {page.title}
                 />
             </Link>    
