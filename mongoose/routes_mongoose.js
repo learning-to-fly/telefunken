@@ -1,6 +1,7 @@
 var express = require('express'),
     router = express.Router()
 var Topic = require("../models/topic.js")
+var upload = require('multer')();
 
 router.use(function timeLog(req, res, next) {
   console.log('Time: ', Date.now());
@@ -26,4 +27,12 @@ router.get('/all', function(req, res) {
     })
   })
 
+  router.post('/page', upload.array(), function(req, res) {
+    var title = req.body.title;
+    var text = req.body.text;
+    console.log(`Save page: "${title}" with "${text}"`);
+    res.status(200).send({result: "ok"});
+  })
+
  module.exports = router
+ 

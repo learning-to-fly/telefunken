@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
 var path = require('path');
 const bPages = require('./routes_mongoose');
 var mongoose = require('mongoose');
@@ -8,7 +9,7 @@ var mongoose = require('mongoose');
 
 app.use(express.static(path.join('reactapp', 'build')));
 app.use('/', bPages);
-
+app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/myproject',  {useNewUrlParser: true}, function(err) {
   if (err) {
