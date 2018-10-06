@@ -27,6 +27,8 @@ router.get('/all', function(req, res) {
     })
   })
 
+  // testing:
+  // curl -X POST -F title=1232 -F text='some text' 'http://localhost:3000/page'
   router.post('/page', upload.array(), function(req, res) {
     var title = req.body.title;
     var text = req.body.text;
@@ -35,4 +37,3 @@ router.get('/all', function(req, res) {
   })
 
  module.exports = router
- 
