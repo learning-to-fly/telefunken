@@ -113,3 +113,18 @@ func (db *DB) Put(ctx context.Context, topic api.Topic) (string, error) {
 
 	return "", nil
 }
+
+func (db *DB) Update(ctx context.Context, topic api.Topic) error {
+	id, err := objectid.FromHex(topic.IDJson)
+	if err != nil {
+		return errors.Wrapf(err, "failed to parse ID: %s", topic.IDJson)
+	}
+	topic.ID = id
+
+	filter := bson.NewDocument(bson.EC.ObjectID("_id", id))
+	if _, err := db.db.Collection(collectionName).ReplaceOne(ctx, filter, topic); err != nil {
+		return err
+	}
+
+	return nil
+}

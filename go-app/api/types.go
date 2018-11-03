@@ -22,3 +22,9 @@ type NewPageRequest struct {
 type NewPageResponse struct {
 	ID string `json:"_id"`
 }
+
+type UpdatePageRequest struct {
+	ID    string `json:"_id"`
+	Title string `json:"title"`
+	Text  string `json:"text"`
+}

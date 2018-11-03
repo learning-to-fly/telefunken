@@ -16,6 +16,7 @@ import (
 type Storage interface {
 	Get(ctx context.Context, id string) (*api.Topic, error)
 	Put(ctx context.Context, topic api.Topic) (string, error)
+	Update(ctx context.Context, topic api.Topic) error
 	GetAll(ctx context.Context) ([]api.Topic, error)
 	WaitClose(timeout time.Duration) error
 }
@@ -39,7 +40,8 @@ func (app *Application) Run(ctx context.Context) error {
 
 	router.Get("/all", app.handlerAll)
 	router.Get("/page/{pageID}", app.handlerGetPage)
-	router.Post("/page", app.handlerPutPage)
+	router.Post("/page", app.handlerNewPage)
+	router.Put("/page", app.handlerUpdatePage)
 
 	fsStatic := http.FileServer(http.Dir("./reactapp/build"))
 	router.Get("/*", func(resp http.ResponseWriter, req *http.Request) {
@@ -84,7 +86,7 @@ func (app *Application) handlerGetPage(resp http.ResponseWriter, req *http.Reque
 }
 
 // testing: curl -i -X POST -d '{"title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page'
-func (app *Application) handlerPutPage(resp http.ResponseWriter, req *http.Request) {
+func (app *Application) handlerNewPage(resp http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
 	defer req.Body.Close()
@@ -106,6 +108,34 @@ func (app *Application) handlerPutPage(resp http.ResponseWriter, req *http.Reque
 	}
 
 	if err := json.NewEncoder(resp).Encode(api.NewPageResponse{ID: id}); err != nil {
+		errorOut(err, resp)
+		return
+	}
+}
+
+// testing: curl -i -X PUT -d '{"_id":"5bde086c4b0fd41c148a0af2", "title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page'
+func (app *Application) handlerUpdatePage(resp http.ResponseWriter, req *http.Request) {
+	ctx := req.Context()
+
+	defer req.Body.Close()
+	reqParam := api.UpdatePageRequest{}
+	if err := json.NewDecoder(req.Body).Decode(&reqParam); err != nil {
+		errorOut(err, resp)
+		return
+	}
+
+	topic := api.Topic{
+		IDJson: reqParam.ID,
+		Title:  reqParam.Title,
+		Text:   reqParam.Text,
+	}
+
+	if err := app.DB.Update(ctx, topic); err != nil {
+		errorOut(err, resp)
+		return
+	}
+
+	if err := json.NewEncoder(resp).Encode(struct{ Result string }{"Ok"}); err != nil {
 		errorOut(err, resp)
 		return
 	}
