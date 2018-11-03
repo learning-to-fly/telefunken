@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	address   = "0.0.0.0:3080"
+	address   = "127.0.0.1:3080"
 	mongoConn = "mongodb://localhost:27017"
 )
 
