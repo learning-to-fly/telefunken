@@ -14,6 +14,11 @@ type Topic struct {
 	CreatedAt time.Time         `bson:"created_at" json:"createdDate"`
 }
 
+type NewPageRequest struct {
+	Title string `json:"title"`
+	Text  string `json:"text"`
+}
+
 type NewPageResponse struct {
 	ID string `json:"_id"`
 }
