@@ -83,15 +83,20 @@ func (app *Application) handlerGetPage(resp http.ResponseWriter, req *http.Reque
 	}
 }
 
-// testing: curl -i -X POST -F title=1232 -F text='some text' 'http://127.0.0.1:3080/page'
+// testing: curl -i -X POST -d '{"title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page'
 func (app *Application) handlerPutPage(resp http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
-	title := req.PostFormValue("title")
-	text := req.PostFormValue("text")
+	defer req.Body.Close()
+	reqParam := api.NewPageRequest{}
+	if err := json.NewDecoder(req.Body).Decode(&reqParam); err != nil {
+		errorOut(err, resp)
+		return
+	}
+
 	topic := api.Topic{
-		Title: title,
-		Text:  text,
+		Title: reqParam.Title,
+		Text:  reqParam.Text,
 	}
 
 	id, err := app.DB.Put(ctx, topic)
