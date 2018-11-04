@@ -63,15 +63,13 @@ func (db *DB) Get(ctx context.Context, idHex string) (*api.Topic, error) {
 
 	var topicOne api.Topic
 	filter := bson.NewDocument(bson.EC.ObjectID("_id", id))
-	row := db.db.Collection(collectionName).FindOne(ctx, filter)
-	if err := row.Decode(&topicOne); err != nil {
+	if err := db.db.Collection(collectionName).FindOne(ctx, filter).Decode(&topicOne); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, errors.Wrapf(ErrNotFound, "not found topic for: %s", idHex)
 		}
-		return nil, errors.Wrapf(err, "failed to find one for: %s", idHex)
+		return nil, errors.Wrapf(err, "failed to find one topic for: %s", idHex)
 	}
 
-	topicOne.IDJson = topicOne.ID.Hex()
 	return &topicOne, nil
 }
 
@@ -87,7 +85,6 @@ func (db *DB) GetAll(ctx context.Context) ([]api.Topic, error) {
 		if err := cursor.Decode(&topic); err != nil {
 			return nil, errors.Wrap(err, "failed to decode record")
 		}
-		topic.IDJson = topic.ID.Hex()
 		topics = append(topics, topic)
 	}
 
@@ -101,7 +98,7 @@ func (db *DB) GetAll(ctx context.Context) ([]api.Topic, error) {
 	return topics, nil
 }
 
-func (db *DB) Put(ctx context.Context, topic api.Topic) (string, error) {
+func (db *DB) Insert(ctx context.Context, topic api.Topic) (string, error) {
 	res, err := db.db.Collection(collectionName).InsertOne(ctx, topic)
 	if err != nil {
 		return "", err
@@ -114,16 +111,16 @@ func (db *DB) Put(ctx context.Context, topic api.Topic) (string, error) {
 	return "", nil
 }
 
-func (db *DB) Update(ctx context.Context, topic api.Topic) error {
-	id, err := objectid.FromHex(topic.IDJson)
+func (db *DB) Update(ctx context.Context, idHex string, topic api.Topic) error {
+	id, err := objectid.FromHex(idHex)
 	if err != nil {
-		return errors.Wrapf(err, "failed to parse ID: '%s'", topic.IDJson)
+		return errors.Wrapf(err, "failed to parse ID: '%s'", idHex)
 	}
 	topic.ID = id
 
 	filter := bson.NewDocument(bson.EC.ObjectID("_id", id))
 	if _, err := db.db.Collection(collectionName).ReplaceOne(ctx, filter, topic); err != nil {
-		return errors.Wrapf(err, "failed to replace row by ID: '%s'", topic.IDJson)
+		return errors.Wrapf(err, "failed to replace row by ID: '%s'", idHex)
 	}
 
 	return nil

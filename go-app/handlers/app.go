@@ -14,8 +14,8 @@ import (
 
 type Storage interface {
 	Get(ctx context.Context, id string) (*api.Topic, error)
-	Put(ctx context.Context, topic api.Topic) (string, error)
-	Update(ctx context.Context, topic api.Topic) error
+	Insert(ctx context.Context, topic api.Topic) (string, error)
+	Update(ctx context.Context, idHex string, topic api.Topic) error
 	GetAll(ctx context.Context) ([]api.Topic, error)
 	Delete(ctx context.Context, idHex string) error
 	WaitClose(timeout time.Duration) error
@@ -100,7 +100,7 @@ func (app *Application) handlerNewPage(resp http.ResponseWriter, req *http.Reque
 		Text:  reqParam.Text,
 	}
 
-	id, err := app.DB.Put(ctx, topic)
+	id, err := app.DB.Insert(ctx, topic)
 	if err != nil {
 		errorOut(err, resp)
 		return
@@ -124,12 +124,11 @@ func (app *Application) handlerUpdatePage(resp http.ResponseWriter, req *http.Re
 
 	pageID := chi.URLParam(req, "pageID")
 	topic := api.Topic{
-		IDJson: pageID,
-		Title:  reqParam.Title,
-		Text:   reqParam.Text,
+		Title: reqParam.Title,
+		Text:  reqParam.Text,
 	}
 
-	if err := app.DB.Update(ctx, topic); err != nil {
+	if err := app.DB.Update(ctx, pageID, topic); err != nil {
 		errorOut(err, resp)
 		return
 	}

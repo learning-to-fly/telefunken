@@ -7,8 +7,7 @@ import (
 )
 
 type Topic struct {
-	ID        objectid.ObjectID `bson:"_id,omitempty" json:"-"`
-	IDJson    string            `bson:"-" json:"_id"`
+	ID        objectid.ObjectID `bson:"_id,omitempty" json:"_id"`
 	Title     string            `bson:"title" json:"title"`
 	Text      string            `bson:"text" json:"text"`
 	CreatedAt time.Time         `bson:"created_at" json:"createdDate"`
