@@ -123,7 +123,23 @@ func (db *DB) Update(ctx context.Context, topic api.Topic) error {
 
 	filter := bson.NewDocument(bson.EC.ObjectID("_id", id))
 	if _, err := db.db.Collection(collectionName).ReplaceOne(ctx, filter, topic); err != nil {
-		return err
+		return errors.Wrapf(err, "failed to replace row by ID: '%s'", topic.IDJson)
+	}
+
+	return nil
+}
+
+func (db *DB) Delete(ctx context.Context, idHex string) error {
+	id, err := objectid.FromHex(idHex)
+	if err != nil {
+		return errors.Wrapf(err, "failed to parse ID: '%s'", idHex)
+	}
+
+	filter := bson.NewDocument(bson.EC.ObjectID("_id", id))
+	if result, err := db.db.Collection(collectionName).DeleteOne(ctx, filter); err != nil {
+		return errors.Wrapf(err, "failed to delete row by ID: '%s'", idHex)
+	} else if result.DeletedCount == 0 {
+		return errors.Errorf("topic %s not found", idHex)
 	}
 
 	return nil

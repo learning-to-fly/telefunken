@@ -46,3 +46,7 @@ type UpdatePageRequest struct {
 type UpdatePageResponse struct {
 	CommonResponse
 }
+
+type DeletePageResponse struct {
+	CommonResponse
+}

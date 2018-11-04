@@ -17,6 +17,7 @@ type Storage interface {
 	Put(ctx context.Context, topic api.Topic) (string, error)
 	Update(ctx context.Context, topic api.Topic) error
 	GetAll(ctx context.Context) ([]api.Topic, error)
+	Delete(ctx context.Context, idHex string) error
 	WaitClose(timeout time.Duration) error
 }
 
@@ -41,6 +42,7 @@ func (app *Application) Run(ctx context.Context) error {
 	router.Get("/page/{pageID}", app.handlerGetPage)
 	router.Post("/page", app.handlerNewPage)
 	router.Put("/page/{pageID}", app.handlerUpdatePage)
+	router.Delete("/page/{pageID}", app.handlerDeletePage)
 
 	fsStatic := http.FileServer(http.Dir("./reactapp/build"))
 	router.Get("/*", func(resp http.ResponseWriter, req *http.Request) {
@@ -61,10 +63,7 @@ func (app *Application) handlerAll(resp http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	if err := json.NewEncoder(resp).Encode(topics); err != nil {
-		errorOut(err, resp)
-		return
-	}
+	okOut(topics, resp)
 }
 
 // testing: curl -s -i http://127.0.0.1:3080/page/XXXXXXX
@@ -78,10 +77,7 @@ func (app *Application) handlerGetPage(resp http.ResponseWriter, req *http.Reque
 		return
 	}
 
-	if err := json.NewEncoder(resp).Encode(topic); err != nil {
-		errorOut(err, resp)
-		return
-	}
+	okOut(topic, resp)
 }
 
 // testing: curl -s -i -X POST -d '{"title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page'
@@ -108,10 +104,7 @@ func (app *Application) handlerNewPage(resp http.ResponseWriter, req *http.Reque
 
 	result := api.NewPageResponse{ID: id}
 	result.SetOk()
-	if err := json.NewEncoder(resp).Encode(result); err != nil {
-		errorOut(err, resp)
-		return
-	}
+	okOut(result, resp)
 }
 
 // testing: curl -s -i -X PUT -d '{"title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page/5bde086c4b0fd41c148a0af2'
@@ -139,14 +132,32 @@ func (app *Application) handlerUpdatePage(resp http.ResponseWriter, req *http.Re
 
 	result := api.UpdatePageResponse{}
 	result.SetOk()
-	if err := json.NewEncoder(resp).Encode(result); err != nil {
+	okOut(result, resp)
+}
+
+// testing: curl -s -i -X DELETE 'http://127.0.0.1:3080/page/5bde086c4b0fd41c148a0af2'
+func (app *Application) handlerDeletePage(resp http.ResponseWriter, req *http.Request) {
+	ctx := req.Context()
+
+	pageID := chi.URLParam(req, "pageID")
+	if err := app.DB.Delete(ctx, pageID); err != nil {
 		errorOut(err, resp)
 		return
+	}
+
+	result := api.DeletePageResponse{}
+	result.SetOk()
+	okOut(result, resp)
+}
+
+func okOut(result interface{}, resp http.ResponseWriter) {
+	if err := json.NewEncoder(resp).Encode(result); err != nil {
+		errorOut(err, resp)
 	}
 }
 
 func errorOut(err error, resp http.ResponseWriter) {
-	resp.WriteHeader(http.StatusInternalServerError)
+	resp.WriteHeader(http.StatusBadRequest)
 
 	res := api.CommonResponse{}
 	res.SetError(err)
