@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -107,7 +106,9 @@ func (app *Application) handlerNewPage(resp http.ResponseWriter, req *http.Reque
 		return
 	}
 
-	if err := json.NewEncoder(resp).Encode(api.NewPageResponse{ID: id}); err != nil {
+	result := api.NewPageResponse{ID: id}
+	result.SetOk()
+	if err := json.NewEncoder(resp).Encode(result); err != nil {
 		errorOut(err, resp)
 		return
 	}
@@ -135,7 +136,9 @@ func (app *Application) handlerUpdatePage(resp http.ResponseWriter, req *http.Re
 		return
 	}
 
-	if err := json.NewEncoder(resp).Encode(struct{ Result string }{"Ok"}); err != nil {
+	result := api.UpdatePageResponse{}
+	result.SetOk()
+	if err := json.NewEncoder(resp).Encode(result); err != nil {
 		errorOut(err, resp)
 		return
 	}
@@ -143,6 +146,10 @@ func (app *Application) handlerUpdatePage(resp http.ResponseWriter, req *http.Re
 
 func errorOut(err error, resp http.ResponseWriter) {
 	resp.WriteHeader(http.StatusInternalServerError)
-	errorMsg := fmt.Sprintf("error: %s", err.Error())
-	resp.Write([]byte(errorMsg))
+
+	res := api.CommonResponse{}
+	res.SetError(err)
+	if err := json.NewEncoder(resp).Encode(res); err != nil {
+		log.Printf("failed to encode error: %s", err)
+	}
 }

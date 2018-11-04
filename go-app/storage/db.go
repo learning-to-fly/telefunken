@@ -58,7 +58,7 @@ func (db DB) WaitClose(timeout time.Duration) error {
 func (db *DB) Get(ctx context.Context, idHex string) (*api.Topic, error) {
 	id, err := objectid.FromHex(idHex)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to parse ID: %s", idHex)
+		return nil, errors.Wrapf(err, "failed to parse ID: '%s'", idHex)
 	}
 
 	var topicOne api.Topic
@@ -117,7 +117,7 @@ func (db *DB) Put(ctx context.Context, topic api.Topic) (string, error) {
 func (db *DB) Update(ctx context.Context, topic api.Topic) error {
 	id, err := objectid.FromHex(topic.IDJson)
 	if err != nil {
-		return errors.Wrapf(err, "failed to parse ID: %s", topic.IDJson)
+		return errors.Wrapf(err, "failed to parse ID: '%s'", topic.IDJson)
 	}
 	topic.ID = id
 
