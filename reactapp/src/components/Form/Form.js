@@ -1,26 +1,60 @@
-import React from 'react';
+import React, { Component } from 'react';
+import axios from 'axios';
 
-const form = () => {
-   return( <div className="first_form">
+class Form extends Component {
+
+  state = {
+    formStore: {
+      title: '',
+      text: ''
+    }
+  };
+
+handlerChange = (event) => {
+  const updatedFormStore = {
+    ...this.state.formStore
+  };
+  updatedFormStore[event.target.name] = event.target.value;
+  
+  this.setState({ formStore : updatedFormStore  });
+};
+handlerPostData = (event) => {
+  event.preventDefault();
+  console.log(this.state.formStore);
+
+  axios.post( '/page', this.state.formStore )
+  .then( response => {
+      //this.setState( { loading: false } );
+      //this.props.history.push( '/' );
+  } )
+  .catch( error => {
+      //this.setState( { loading: false } );
+  } );
+}
+
+  render(){
+    return( <div className="first_form">
     <form id="first_form">
       <div className="form_line">
         <label>Enter title</label>
         <div className="input">
-          <input type="text" />
+          <input type="text" onChange={this.handlerChange} name="title" />
         </div>
       </div>
       <div className="form_line">
         <label>Enter text</label>
         <div className="textarea">
-          <textarea></textarea>
+          <textarea name="text" onChange={this.handlerChange}></textarea>
         </div>
         </div>
         <div className="form_line">
           <div className="submit">
-            <button type="submit" form="first_form">Submit</button>
+            <button type="submit" form="first_form" onClick = {this.handlerPostData}>Submit</button>
           </div>
         </div>           
     </form>
   </div> 
-   )};
-export default form;
+   );
+  }
+}
+export default Form;
