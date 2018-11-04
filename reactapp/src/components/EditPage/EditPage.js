@@ -9,7 +9,7 @@ class Page extends Component{
     componentDidMount () {
         // /page/ID 
         
-        axios.get('/page/'+this.props.match.params.id)
+        axios.get('/v1/page/'+this.props.match.params.id)
         .then(response => {
             this.setState({updatedFormStore: response.data});
         });
@@ -29,10 +29,10 @@ class Page extends Component{
         let id = this.state.updatedFormStore._id;
         delete this.state.updatedFormStore._id;
         console.log('@@@ id '+ id + '  this.state.updatedFormStore= ' +this.state.updatedFormStore);
-        axios.put( '/page/'+id, this.state.updatedFormStore )
+        axios.put( '/v1/page/'+id, this.state.updatedFormStore )
         .then( response => {
             //this.setState( { loading: false } );
-            this.props.history.push( '/pages' );
+            this.props.history.push( '/v1/pages' );
         } )
         .catch( error => {
             //this.setState( { loading: false } );

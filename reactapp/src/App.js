@@ -14,12 +14,12 @@ class App extends Component {
             <div className="App">
                 <nav>
                     <NavLink to='/'>Home</NavLink>
-                    <NavLink to='/pages'>All pages</NavLink>
+                    <NavLink to='/v1/pages'>All pages</NavLink>
                 </nav>
-                <Route path="/pages" component = { Pages } />
+                <Route path="/v1/pages" component = { Pages } />
                 <Route path="/" exact component = { Form } />
-                <Route path="/page/:id" component = { Page } />
-                <Route path="/edit/:id" component = { EditPage } />
+                <Route path="/v1/page/:id" component = { Page } />
+                <Route path="/v1/edit/:id" component = { EditPage } />
             </div>
         </BrowserRouter>
     );

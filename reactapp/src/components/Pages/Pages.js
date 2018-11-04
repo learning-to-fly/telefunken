@@ -11,7 +11,7 @@ class Pages extends Component{
         pages: []
     }
     componentDidMount(){
-       axios.get('/all')
+       axios.get('/v1/all')
               .then(response => {
                 this.setState({pages: response.data});
                 console.log('[Pages componentDidMount()]' + response.data);

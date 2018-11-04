@@ -10,7 +10,7 @@ class Page extends Component{
     componentDidMount () {
         // /page/ID 
         
-        axios.get('/page/'+this.props.match.params.id)
+        axios.get('/v1/page/'+this.props.match.params.id)
         .then(response => {
             this.setState({activePage: response.data});
             console.log('[page componentDidMount]' + this.state.activePage);
