@@ -1,0 +1,73 @@
+import React, {Component} from 'react';
+import axios from 'axios';
+
+class Page extends Component{
+    state = {
+        updatedFormStore: {},
+
+    }
+    componentDidMount () {
+        // /page/ID 
+        
+        axios.get('/page/'+this.props.match.params.id)
+        .then(response => {
+            this.setState({updatedFormStore: response.data});
+        });
+     
+        
+    }
+    handlerChange = (event) => {
+        const updatedFormStore = {
+          ...this.state.updatedFormStore
+        };
+        updatedFormStore[event.target.name] = event.target.value;
+        
+        this.setState({ updatedFormStore : updatedFormStore  });
+      };
+      handlerPostData = (event) => {
+        event.preventDefault();
+        console.log(this.state.formStore);
+      
+        axios.put( '/page', this.state.updatedFormStore )
+        .then( response => {
+            //this.setState( { loading: false } );
+            //this.props.history.push( '/' );
+        } )
+        .catch( error => {
+            //this.setState( { loading: false } );
+        } );
+      }    
+    render(){
+        return(
+            <div>
+                <h1>EditPage</h1>
+
+                <div className="first_form">
+                    <form id="first_form">
+                    <div className="form_line">
+                        <label>Enter title</label>
+                        <div className="input">
+                        <input type="text" onChange={this.handlerChange} name="title"  value={this.state.updatedFormStore.title} />
+                        </div>
+                    </div>
+                    <div className="form_line">
+                        <label>Enter text</label>
+                        <div className="textarea">
+                        <textarea name="text" onChange={this.handlerChange}  value={this.state.updatedFormStore.text} ></textarea>
+                        </div>
+                        </div>
+                        <div className="form_line">
+                        <div className="submit">
+                            <button type="submit" form="first_form" onClick = {this.handlerPostData}>Update</button>
+                        </div>
+                        </div>           
+                    </form>
+                </div>                
+            </div>
+        );
+    }
+
+    
+
+}
+export default Page;
