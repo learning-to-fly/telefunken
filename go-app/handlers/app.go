@@ -40,7 +40,7 @@ func (app *Application) Run(ctx context.Context) error {
 	router.Get("/all", app.handlerAll)
 	router.Get("/page/{pageID}", app.handlerGetPage)
 	router.Post("/page", app.handlerNewPage)
-	router.Put("/page", app.handlerUpdatePage)
+	router.Put("/page/{pageID}", app.handlerUpdatePage)
 
 	fsStatic := http.FileServer(http.Dir("./reactapp/build"))
 	router.Get("/*", func(resp http.ResponseWriter, req *http.Request) {
@@ -51,7 +51,7 @@ func (app *Application) Run(ctx context.Context) error {
 	return http.ListenAndServe(app.addr, router)
 }
 
-// testing: curl -i http://127.0.0.1:3080/all
+// testing: curl -s -i http://127.0.0.1:3080/all
 func (app *Application) handlerAll(resp http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
@@ -67,7 +67,7 @@ func (app *Application) handlerAll(resp http.ResponseWriter, req *http.Request) 
 	}
 }
 
-// testing: curl -i http://127.0.0.1:3080/page/XXXXXXX
+// testing: curl -s -i http://127.0.0.1:3080/page/XXXXXXX
 func (app *Application) handlerGetPage(resp http.ResponseWriter, req *http.Request) {
 	pageID := chi.URLParam(req, "pageID")
 	ctx := req.Context()
@@ -84,7 +84,7 @@ func (app *Application) handlerGetPage(resp http.ResponseWriter, req *http.Reque
 	}
 }
 
-// testing: curl -i -X POST -d '{"title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page'
+// testing: curl -s -i -X POST -d '{"title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page'
 func (app *Application) handlerNewPage(resp http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
@@ -114,7 +114,7 @@ func (app *Application) handlerNewPage(resp http.ResponseWriter, req *http.Reque
 	}
 }
 
-// testing: curl -i -X PUT -d '{"_id":"5bde086c4b0fd41c148a0af2", "title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page'
+// testing: curl -s -i -X PUT -d '{"title":"1232", "text":"some text"}' 'http://127.0.0.1:3080/page/5bde086c4b0fd41c148a0af2'
 func (app *Application) handlerUpdatePage(resp http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
@@ -125,8 +125,9 @@ func (app *Application) handlerUpdatePage(resp http.ResponseWriter, req *http.Re
 		return
 	}
 
+	pageID := chi.URLParam(req, "pageID")
 	topic := api.Topic{
-		IDJson: reqParam.ID,
+		IDJson: pageID,
 		Title:  reqParam.Title,
 		Text:   reqParam.Text,
 	}
