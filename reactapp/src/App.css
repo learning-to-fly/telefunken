@@ -1,14 +1,16 @@
 .App {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 0;
 }
 
 .App .first_form{
-  width: 90%;
+  width: 89%;
   max-width: 500px;
   margin: 0 auto;
-  padding: 30px;
+  padding-left: 5%;
+  padding-right: 5%;
   border: 1px dashed #ccc;
+  padding-top: 20px;
 }
 .App .first_form .form_line{
   margin-bottom: 50px;
@@ -53,4 +55,37 @@
   box-shadow: none;
   font-size: 18px;
   border: none;
+}
+.App nav{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  height: 50px;
+  border-bottom: 1px solid #ccc;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.App nav a{
+  color: #666;
+  text-decoration: none;
+  margin-right: 20px;
+}
+.App nav a.addArticle{
+  padding-left: 30px;
+  position: relative;
+}
+.App nav a.addArticle::before{
+  content: "+";
+  position: absolute;
+  left:0;
+  top: 0;
+  text-align: center;
+  color: #fff;
+  background: blue;
+  font-size: 20px;
+  display: block;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
 }

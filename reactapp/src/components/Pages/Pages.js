@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import NavMenu from '../NavMenu/NavMenu';
 import Page from '../Page/Page';
 import axios from 'axios';
+import classes from './Pages.css';
 
 class Pages extends Component{
     state = {
@@ -30,12 +31,12 @@ class Pages extends Component{
     render(){
 
         return( 
-            <div>
+            <ul className="Pages">
             <NavMenu 
                 pages = {this.state.pages} 
                 openPage = {this.openPageHandler} />
                
-            </div>
+            </ul>
             
         );
     }

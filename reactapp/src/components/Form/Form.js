@@ -20,12 +20,11 @@ handlerChange = (event) => {
 };
 handlerPostData = (event) => {
   event.preventDefault();
-  console.log(this.state.formStore);
 
-  axios.post( '/page', this.state.formStore )
+  axios.post( '/v1/page', this.state.formStore )
   .then( response => {
       //this.setState( { loading: false } );
-      //this.props.history.push( '/' );
+      this.props.history.push( '/v1/pages' );
   } )
   .catch( error => {
       //this.setState( { loading: false } );

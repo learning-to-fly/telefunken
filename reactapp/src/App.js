@@ -5,6 +5,7 @@ import Form from './components/Form/Form';
 import Pages from './components/Pages/Pages';
 import Page from './components/Page/Page';
 import EditPage from './components/EditPage/EditPage';
+import Layout from './components/Layout/Layout';
 
 class App extends Component {
   render() {
@@ -12,14 +13,16 @@ class App extends Component {
     return (
         <BrowserRouter>
             <div className="App">
-                <nav>
-                    <NavLink to='/'>Home</NavLink>
-                    <NavLink to='/v1/pages'>All pages</NavLink>
-                </nav>
-                <Route path="/v1/pages" component = { Pages } />
-                <Route path="/" exact component = { Form } />
-                <Route path="/v1/page/:id" component = { Page } />
-                <Route path="/v1/edit/:id" component = { EditPage } />
+                <Layout>
+                    <nav>
+                        <NavLink to='/' className='addArticle'>Add article</NavLink>
+                        <NavLink to='/v1/pages'>All articles</NavLink>
+                    </nav>
+                    <Route path="/v1/pages" component = { Pages } />
+                    <Route path="/" exact component = { Form } />
+                    <Route path="/v1/page/:id" component = { Page } />
+                    <Route path="/v1/edit/:id" component = { EditPage } />
+                </Layout>
             </div>
         </BrowserRouter>
     );

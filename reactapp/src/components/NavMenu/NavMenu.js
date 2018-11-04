@@ -6,13 +6,15 @@ const navMenu = (props) => {
    return( 
    props.pages.map(page => {
         return( 
-            <Link to={'/v1/page/'+ page._id} key = {page._id}>
-             <Item 
-                
-                clicked = {() => props.openPage(page._id,page.title, page.text)}
-                title = {page.title}
-                />
-            </Link>    
+            <li>
+                <Link to={'/v1/page/'+ page._id} key = {page._id}>
+                <Item 
+                    
+                    clicked = {() => props.openPage(page._id,page.title, page.text)}
+                    title = {page.title}
+                    />
+                </Link>    
+            </li>
         );
         
       })
