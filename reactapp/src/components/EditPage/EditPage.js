@@ -26,12 +26,13 @@ class Page extends Component{
       };
       handlerPostData = (event) => {
         event.preventDefault();
-        console.log(this.state.formStore);
-      
-        axios.put( '/page', this.state.updatedFormStore )
+        let id = this.state.updatedFormStore._id;
+        delete this.state.updatedFormStore._id;
+        console.log('@@@ id '+ id + '  this.state.updatedFormStore= ' +this.state.updatedFormStore);
+        axios.put( '/page/'+id, this.state.updatedFormStore )
         .then( response => {
             //this.setState( { loading: false } );
-            //this.props.history.push( '/' );
+            this.props.history.push( '/pages' );
         } )
         .catch( error => {
             //this.setState( { loading: false } );
