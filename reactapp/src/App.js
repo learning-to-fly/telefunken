@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import classes from './App.css';
 import { BrowserRouter, Route, NavLink } from 'react-router-dom';
 import Form from './components/Form/Form';
 import Pages from './components/Pages/Pages';
@@ -12,10 +12,10 @@ class App extends Component {
 
     return (
         <BrowserRouter>
-            <div className="App">
+            <div className={classes.App}>
                 <Layout>
                     <nav>
-                        <NavLink to='/' className='addArticle'>Add article</NavLink>
+                        <NavLink to='/' className={classes.addArticle}>Add article</NavLink>
                         <NavLink to='/v1/pages'>All articles</NavLink>
                     </nav>
                     <Route path="/v1/pages" component = { Pages } />

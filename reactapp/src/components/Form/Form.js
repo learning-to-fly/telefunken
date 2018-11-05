@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import classes from '../../App.css';
 
 class Form extends Component {
 
@@ -32,22 +33,22 @@ handlerPostData = (event) => {
 }
 
   render(){
-    return( <div className="first_form">
+    return( <div className={classes.first_form}>
     <form id="first_form">
-      <div className="form_line">
+      <div className={classes.form_line}>
         <label>Enter title</label>
-        <div className="input">
+        <div className={classes.input}>
           <input type="text" onChange={this.handlerChange} name="title" />
         </div>
       </div>
-      <div className="form_line">
+      <div className={classes.form_line}>
         <label>Enter text</label>
-        <div className="textarea">
+        <div className={classes.textarea}>
           <textarea name="text" onChange={this.handlerChange}></textarea>
         </div>
         </div>
-        <div className="form_line">
-          <div className="submit">
+        <div className={classes.form_line}>
+          <div className={classes.submit}>
             <button type="submit" form="first_form" onClick = {this.handlerPostData}>Submit</button>
           </div>
         </div>           

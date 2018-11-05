@@ -3,7 +3,7 @@ import classes from './Layout.css';
 
 const Layout = (props) => {
     return(
-        <div className='Layout'>
+        <div className={classes.Layout}>
             {props.children}
         </div>
     );

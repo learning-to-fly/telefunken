@@ -28,7 +28,6 @@ class Page extends Component{
         event.preventDefault();
         let id = this.state.updatedFormStore._id;
         delete this.state.updatedFormStore._id;
-        console.log('@@@ id '+ id + '  this.state.updatedFormStore= ' +this.state.updatedFormStore);
         axios.put( '/v1/page/'+id, this.state.updatedFormStore )
         .then( response => {
             //this.setState( { loading: false } );

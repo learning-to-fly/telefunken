@@ -1,0 +1,11 @@
+.DelElement{
+    position: absolute;
+    right: 0;
+    top: 9px;
+    display: block;
+    cursor: pointer;
+    width: 16px;
+    height: 21px;
+    background: url(../../assets/img/i_del.png) no-repeat top left;
+    background-size: cover;
+}
