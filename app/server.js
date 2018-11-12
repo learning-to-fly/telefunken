@@ -1,15 +1,17 @@
 var express = require('express');
 var app = express();
+var bodyParser = require('body-parser');
 var path = require('path');
-const bPages = require('./routes');
-var db = require('./db');
+const bPages = require('./routes_mongoose');
+var mongoose = require('mongoose');
 
 //var dbName = "myproject"
 
 app.use(express.static(path.join('reactapp', 'build')));
 app.use('/', bPages);
+app.use(bodyParser.urlencoded({ extended: true }));
 
-db.connect('mongodb://localhost:27017', "myproject", function(err) {
+mongoose.connect('mongodb://localhost:27017/myproject',  {useNewUrlParser: true}, function(err) {
   if (err) {
     console.log('Unable to connect to Mongo.')
     process.exit(1)
