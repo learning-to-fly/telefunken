@@ -14,21 +14,11 @@ router.use(function timeLog(req, res, next) {
   console.log('Time: ', Date.now());
   next();
 });
-/*
-router.get('/v1/all', function(req, res) {
-    console.log("Inside GET FIND");
-    Topic.find({
-        title: /Topic/i
-    }).exec(function(err, topics){
-        if (err) throw err;
-        res.status(200).send(topics);
-    })
-})
-*/
+
 
 /*
  Get all topics:
- curl -v -X GET 'http://10.55.81.13:3000/v1/page'
+ curl -v -X GET 'http://10.55.81.13:3000/v1/pages'
 
  Create new topic
  curl -v -POST --header "Content-Type: application/json" -d '{"title":"1232", "text":"some text"}' 'http://10.55.81.13:3000/v1/page'
@@ -40,6 +30,18 @@ router.get('/v1/all', function(req, res) {
  curl -v -X DELETE --header "Content-Type: application/json" 'http://10.55.81.13:3000/v1/page/5be9609946d49d4ac5e2378b'
 
 */
+
+
+router.route('/v1/pages')
+	.get(jsonParser, function(req, res) {
+		Topic.find(function(err, topics) {
+			if (err)
+				res.send(err);
+
+			res.json(topics);
+		});
+	});
+
 router.route('/v1/page')
 	.post(jsonParser, function(req, res) {
 		var topic = new Topic();
@@ -57,14 +59,6 @@ router.route('/v1/page')
 
 		
 	})
-	.get(jsonParser, function(req, res) {
-		Topic.find(function(err, topics) {
-			if (err)
-				res.send(err);
-
-			res.json(topics);
-		});
-	});
 
 router.route('/v1/page/:topic_id')
 	.get(jsonParser, function(req, res) {
@@ -76,18 +70,21 @@ router.route('/v1/page/:topic_id')
 	})
 	.put(jsonParser, function(req, res) {
 		Topic.findById(req.params.topic_id, function(err, topic) {
-                        console.log(`Topic: ${topic}`); // testing
-                        console.log(`Title ${req.body.title}`); // testing
+
 			if (err)
 				res.send(err);
-
-			topic.title = req.body.title;
-			topic.save(function(err) {
-				if (err)
+                        if (req.body.title) 
+                                res.send({ message: 'Title is empty!' });  
+			if (topic) {
+                            topic.title = req.body.title
+                            topic.save(function(err) {
+			            if (err)
 					res.send(err);
 
-				res.json({ message: 'Topic title updated!' });
-			});
+				    res.json({ message: 'Topic title updated!' });
+        			});
+                        }
+                        else res.send({ message: 'Topic not found!' });
 
 		});
 	})
