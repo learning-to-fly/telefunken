@@ -41,7 +41,7 @@ func (app *Application) Run(ctx context.Context) error {
 	router.Route("/v1", func(router chi.Router) {
 		router.Use(mwWithContentType("application/json"))
 
-		router.Get("/all", app.handlerAll)
+		router.Get("/pages", app.handlerPages)
 		router.Get("/page/{pageID}", app.handlerGetPage)
 		router.Post("/page", app.handlerNewPage)
 		router.Put("/page/{pageID}", app.handlerUpdatePage)
@@ -57,8 +57,8 @@ func (app *Application) Run(ctx context.Context) error {
 	return http.ListenAndServe(app.addr, router)
 }
 
-// testing: curl -s -i http://127.0.0.1:3080/v1/all
-func (app *Application) handlerAll(resp http.ResponseWriter, req *http.Request) {
+// testing: curl -s -i http://127.0.0.1:3080/v1/pages
+func (app *Application) handlerPages(resp http.ResponseWriter, req *http.Request) {
 	ctx := req.Context()
 
 	topics, err := app.DB.GetAll(ctx)
