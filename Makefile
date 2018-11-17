@@ -16,10 +16,7 @@ docker-build-node-app:
 docker-run-node-app:
 	docker run --name telefunken-node-app --rm -it -p 3000:3000 --env MONGO_CONN=mongodb://localhost:27017/ telefunken-node-app
 
-docker-run-app-80:
-	APP_PORT=80 docker-compose up -d
-
-docker-run-app-3000:
+docker-run-app:
 	docker-compose up -d
 
 docker-stop-app:
