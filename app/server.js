@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var path = require('path');
-const bPages = require('./routes_mongoose');
+const bPages = require('./routes');
 var mongoose = require('mongoose');
 
 //var dbName = "myproject"

@@ -1,5 +1,5 @@
 run-app:
-	node mongoose/server_mongoose.js
+	node app/server.js
 
 run-go-app:
 	go run go-app/main.go
