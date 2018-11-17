@@ -1,0 +1,29 @@
+# docker-compose build
+# APP_PORT=3000 docker-compose up -d
+# docker-compose down
+version: "3"
+
+volumes:
+  mongo-data:
+
+services:
+    telefunken-node-app:
+        build: ./
+        image: telefunken-node-app
+        container_name: telefunken-node-app
+        restart: always
+        environment:
+            - MONGO_CONN=mongodb://mongodb:27017/
+        ports:
+            - ${APP_PORT:-3000}:3000
+        links:
+            - mongodb
+
+    mongodb:
+        image: mongo:4
+        container_name: mongo
+        restart: always
+        expose:
+            - "27017"
+        volumes:
+            - mongo-data:/data/db

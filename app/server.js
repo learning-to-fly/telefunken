@@ -5,13 +5,14 @@ var path = require('path');
 const bPages = require('./routes');
 var mongoose = require('mongoose');
 
-//var dbName = "myproject"
+const dbName = "myproject"
+const mongoConn = process.env.MONGO_CONN || 'mongodb://localhost:27017/'
 
-app.use(express.static(path.join('reactapp', 'build')));
+ app.use(express.static(path.join('reactapp', 'build')));
 app.use('/', bPages);
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/myproject',  {useNewUrlParser: true}, function(err) {
+mongoose.connect(mongoConn + dbName,  {useNewUrlParser: true}, function(err) {
   if (err) {
     console.log('Unable to connect to Mongo.')
     process.exit(1)
