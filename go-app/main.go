@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
 	"github.com/learning-to-fly/telefunken/go-app/handlers"
@@ -10,11 +11,16 @@ import (
 )
 
 const (
-	address   = "127.0.0.1:3080"
-	mongoConn = "mongodb://localhost:27017"
+	address          = "127.0.0.1:3080"
+	defaultMongoConn = "mongodb://localhost:27017"
 )
 
 func main() {
+	mongoConn := defaultMongoConn
+	if envMongoConn := os.Getenv("MONGO_CONN"); envMongoConn != "" {
+		mongoConn = envMongoConn
+	}
+
 	ctx, cancelFn := context.WithCancel(context.Background())
 	db, err := storage.New(ctx, mongoConn)
 	if err != nil {
