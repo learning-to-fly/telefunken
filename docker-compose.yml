@@ -17,6 +17,8 @@ services:
             - 80:80
         links:
             - telefunken-node-app
+        depends_on:
+            - telefunken-node-app
 
     telefunken-node-app:
         build: ./
@@ -28,6 +30,8 @@ services:
         ports:
             - ${APP_PORT:-3000}:3000
         links:
+            - mongodb
+        depends_on:
             - mongodb
 
     # telefunken-go-app:
