@@ -64,3 +64,4 @@ typings/
 .next
 
 mongo-data
+nginx/htpasswd

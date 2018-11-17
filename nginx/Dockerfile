@@ -5,4 +5,4 @@ FROM nginx:alpine
 ADD default.conf /etc/nginx/conf.d/default.conf
 ADD htpasswd /etc/nginx/htpasswd
 
-EXPOSE 80 443
+EXPOSE 80
