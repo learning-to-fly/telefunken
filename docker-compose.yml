@@ -7,6 +7,17 @@ volumes:
   mongo-data:
 
 services:
+    telefunken-nginx:
+        build:
+            context: nginx
+        image: telefunken-nginx
+        container_name: telefunken-nginx
+        restart: always
+        ports:
+            - 80:80
+        links:
+            - telefunken-node-app
+
     telefunken-node-app:
         build: ./
         image: telefunken-node-app
