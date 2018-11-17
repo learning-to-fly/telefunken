@@ -19,6 +19,20 @@ services:
         links:
             - mongodb
 
+    telefunken-go-app:
+        build:
+            context: .
+            dockerfile: Dockerfile.go-app
+        image: telefunken-go-app
+        container_name: telefunken-go-app
+        restart: always
+        environment:
+            - MONGO_CONN=mongodb://mongodb:27017/
+        ports:
+            - ${GO_APP_PORT:-3080}:3080
+        links:
+            - mongodb
+
     mongodb:
         image: mongo:4
         container_name: mongo

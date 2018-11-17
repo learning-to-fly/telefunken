@@ -1,0 +1,21 @@
+# docker build -t telefunken-go-app -f Dockerfile.go-app .
+# docker run --name telefunken-go-app --rm -it -p 3080:3080 --env MONGO_CONN=mongodb://localhost:27017/ telefunken-go-app
+
+# build image
+FROM golang:alpine as go_builder
+
+RUN apk add --no-cache git
+
+COPY . /src/
+WORKDIR /src
+ENV CGO_ENABLED=0
+RUN go build -v -ldflags="-w -s" -o /go/bin/telefunken go-app/main.go
+
+# final image
+FROM alpine
+
+COPY --from=go_builder /go/bin/telefunken /app/telefunken
+
+CMD ["/app/telefunken"]
+
+EXPOSE 3080
