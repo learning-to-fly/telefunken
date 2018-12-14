@@ -7,7 +7,7 @@ import (
 
 	"github.com/learning-to-fly/telefunken/go-app/api"
 	"github.com/mongodb/mongo-go-driver/bson"
-	"github.com/mongodb/mongo-go-driver/bson/objectid"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 	"github.com/mongodb/mongo-go-driver/mongo"
 	"github.com/pkg/errors"
 )
@@ -56,13 +56,13 @@ func (db DB) WaitClose(timeout time.Duration) error {
 }
 
 func (db *DB) Get(ctx context.Context, idHex string) (*api.Topic, error) {
-	id, err := objectid.FromHex(idHex)
+	id, err := primitive.ObjectIDFromHex(idHex)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to parse ID: '%s'", idHex)
 	}
 
 	var topicOne api.Topic
-	filter := bson.NewDocument(bson.EC.ObjectID("_id", id))
+	filter := bson.D{{"_id", id}}
 	if err := db.db.Collection(collectionName).FindOne(ctx, filter).Decode(&topicOne); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, errors.Wrapf(ErrNotFound, "not found topic for: %s", idHex)
@@ -104,7 +104,7 @@ func (db *DB) Insert(ctx context.Context, topic api.Topic) (string, error) {
 		return "", err
 	}
 
-	if objID, ok := res.InsertedID.(objectid.ObjectID); ok {
+	if objID, ok := res.InsertedID.(primitive.ObjectID); ok {
 		return objID.Hex(), nil
 	}
 
@@ -112,13 +112,13 @@ func (db *DB) Insert(ctx context.Context, topic api.Topic) (string, error) {
 }
 
 func (db *DB) Update(ctx context.Context, idHex string, topic api.Topic) error {
-	id, err := objectid.FromHex(idHex)
+	id, err := primitive.ObjectIDFromHex(idHex)
 	if err != nil {
 		return errors.Wrapf(err, "failed to parse ID: '%s'", idHex)
 	}
 	topic.ID = id
 
-	filter := bson.NewDocument(bson.EC.ObjectID("_id", id))
+	filter := bson.D{{"_id", id}}
 	if _, err := db.db.Collection(collectionName).ReplaceOne(ctx, filter, topic); err != nil {
 		return errors.Wrapf(err, "failed to replace row by ID: '%s'", idHex)
 	}
@@ -127,12 +127,12 @@ func (db *DB) Update(ctx context.Context, idHex string, topic api.Topic) error {
 }
 
 func (db *DB) Delete(ctx context.Context, idHex string) error {
-	id, err := objectid.FromHex(idHex)
+	id, err := primitive.ObjectIDFromHex(idHex)
 	if err != nil {
 		return errors.Wrapf(err, "failed to parse ID: '%s'", idHex)
 	}
 
-	filter := bson.NewDocument(bson.EC.ObjectID("_id", id))
+	filter := bson.D{{"_id", id}}
 	if result, err := db.db.Collection(collectionName).DeleteOne(ctx, filter); err != nil {
 		return errors.Wrapf(err, "failed to delete row by ID: '%s'", idHex)
 	} else if result.DeletedCount == 0 {

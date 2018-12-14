@@ -3,14 +3,14 @@ package api
 import (
 	"time"
 
-	"github.com/mongodb/mongo-go-driver/bson/objectid"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 )
 
 type Topic struct {
-	ID        objectid.ObjectID `bson:"_id,omitempty" json:"_id"`
-	Title     string            `bson:"title" json:"title"`
-	Text      string            `bson:"text" json:"text"`
-	CreatedAt time.Time         `bson:"created_at" json:"createdDate"`
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"_id"`
+	Title     string             `bson:"title" json:"title"`
+	Text      string             `bson:"text" json:"text"`
+	CreatedAt time.Time          `bson:"created_at" json:"createdDate"`
 }
 
 type CommonResponse struct {
